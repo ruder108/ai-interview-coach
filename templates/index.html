@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>AI Interview Coach</title>
+        <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
+    </head>
+    <body>
+
+        <div class="container">
+            <h1>AI Interview Coach</h1>
+            <form action="/interview" method="POST">
+                <label>Enter Your Name</label>
+                <input type="text" name="username"  placeholder="Your Name">
+
+                <label> Select Role</label>
+                <select name="role">
+                    <option>Data Analyst</option>
+                    <option>Software Developer</option>
+                    <option>AI/ML Engineer</option>
+                </select>
+                
+                <button type="submit">Start Interview</button>
+            </form>
+        </div>
+    </body>
+    </html>
