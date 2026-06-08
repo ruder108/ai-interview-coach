@@ -7,7 +7,16 @@ def home():
 def interview():
     username= request.form["username"]
     role= request.form["role"]
-    return f"Welcome {username}! you selected {role}"
-
+    if role == "Data Analyst":
+        question = "What is Data Cleaning?"
+    elif role == "Software Developer":
+        question = "Explain OOP."
+    elif role == "AI/ML Engineer":
+        question = "What is supervised learning?"
+        
+    return render_template(
+        "interview.html",
+        username=username,
+        question=question)
 if __name__ == "__main__":
     app.run(debug = True)
