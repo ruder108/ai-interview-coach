@@ -29,3 +29,7 @@ button{
     padding: 10px;
     cursor: pointer;
 }
+.container p{
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}

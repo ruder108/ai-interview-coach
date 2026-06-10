@@ -1,5 +1,22 @@
 from flask import Flask, render_template, request
 app = Flask(__name__)
+questions = {
+    "Data Analyst": [
+        "What is Data Cleaning?",
+        "What is SQL?",
+        "What is Data Visualization?"
+    ],
+    "Software Developer": [
+        "Explain OOP.",
+        "What is Inheritance?",
+        "What is a Class?"
+    ],
+    "AI/ML Engineer":[
+        "What is supervised learning?",
+        "What is overfitting?",
+        "What is a neural network?"
+    ]
+}
 @app.route("/")
 def home():
     return render_template("index.html")
@@ -7,16 +24,11 @@ def home():
 def interview():
     username= request.form["username"]
     role= request.form["role"]
-    if role == "Data Analyst":
-        question = "What is Data Cleaning?"
-    elif role == "Software Developer":
-        question = "Explain OOP."
-    elif role == "AI/ML Engineer":
-        question = "What is supervised learning?"
-        
+    question = questions[role][0]
     return render_template(
         "interview.html",
         username=username,
+        role=role,
         question=question)
 @app.route("/feedback", methods=["POST"])
 def feedback(): 
@@ -31,18 +43,13 @@ def feedback():
         score = 4
         feedback_text = "Answer is too short."
 
-    return f"""
-    <h1>Interview Feedback</h1>
-
-    <p><strong>Name:</strong> {username}</p>
-
-    <p><strong>Question:</strong> {question}</p>
-
-    <p><strong>Your Answer:</strong> {answer}</p>
-
-    <p><strong>Score:</strong> {score}/10</p>
-
-    <p><strong>Feedback:</strong> {feedback_text}</p>
-    """
+    return render_template(
+        "feedback.html",
+        username=username,
+        question=question,
+        answer=answer,
+        score=score,
+        feedback_text=feedback_text
+    )
 if __name__ == "__main__":
     app.run(debug = True)
