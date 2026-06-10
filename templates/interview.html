@@ -11,11 +11,14 @@
 
     <p>{{ question }}</p>
 
-    <textarea rows="6" cols="60"></textarea>
+    <form action="/feedback" method="POST">
+        <input type="hidden" name="username" value="{{ username }}">
+        <input type="hidden" name="question" value="{{ question }}">
+        <textarea rows="6" cols="60" name="answer" placeholder="Write your answer here"></textarea>
 
     <br><br>
 
-    <button>Submit Answer</button>
-
+    <button type="submit">Submit Answer</button>
+    </form>
 </body>
 </html>
