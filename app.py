@@ -20,6 +20,7 @@ questions = {
 @app.route("/")
 def home():
     return render_template("index.html")
+
 @app.route("/interview",methods=["POST"])
 def interview():
     username= request.form["username"]
@@ -29,27 +30,36 @@ def interview():
         "interview.html",
         username=username,
         role=role,
-        question=question)
+        question=question,
+        question_index=0
+        )
+    
 @app.route("/feedback", methods=["POST"])
 def feedback(): 
     username = request.form["username"]
     question = request.form["question"]
     answer = request.form["answer"]
-
-    if len(answer) > 30:
-        score = 8
-        feedback_text = "Good answer. Try adding more details."
-    else:
-        score = 4
-        feedback_text = "Answer is too short."
-
+    role = request.form["role"]
+    question_index = int(request.form["question_index"])
+    next_index = question_index + 1
+    
+    if next_index < len(questions[role]):
+        next_question = questions[role][next_index] 
+        return render_template(
+            "interview.html",
+            username=username,
+            role=role,
+            question=next_question,
+            question_index=next_index
+            )
     return render_template(
         "feedback.html",
-        username=username,
-        question=question,
-        answer=answer,
-        score=score,
-        feedback_text=feedback_text
-    )
+        username=username, 
+        question=question, 
+        answer=answer, 
+        score=8,
+        feedback_text="Interview Completed!"
+        )    
+
 if __name__ == "__main__":
     app.run(debug = True)
