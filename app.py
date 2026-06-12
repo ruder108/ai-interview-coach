@@ -64,11 +64,14 @@ def feedback():
             total_score=total_score
             )
     if total_score >= 20:
-        performance = "excelent"
+        performance = "Excellent"
+        feedback_text = "Outstanding performance! You demonstrated strong interview skills."
     elif total_score >= 12:
         performance = "Good"
+        feedback_text = "Good performance. With more practice, you can improve further."
     else:
         performance = "Needs Improvement"
+        feedback_text = "Keep practicing. Focus on giving more detailed answers."
           
     return render_template(
         "feedback.html",
@@ -77,7 +80,7 @@ def feedback():
         answer=answer, 
         score=total_score,
         performance=performance,
-        feedback_text="Interview Completed!"
+        feedback_text=feedback_text
         )    
 
 if __name__ == "__main__":
