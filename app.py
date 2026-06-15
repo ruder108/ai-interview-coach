@@ -72,7 +72,14 @@ def feedback():
     else:
         performance = "Needs Improvement"
         feedback_text = "Keep practicing. Focus on giving more detailed answers."
-          
+        
+    with open("results.txt", "a") as file:
+        file.write(f"Name: {username}\n")
+        file.write(f"Role: {role}\n")
+        file.write(f"Score: {total_score}/24\n")
+        file.write(f"Performance: {performance}\n")
+        file.write("---------------------\n")
+
     return render_template(
         "feedback.html",
         username=username, 
