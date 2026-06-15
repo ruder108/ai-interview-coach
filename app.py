@@ -89,6 +89,16 @@ def feedback():
         performance=performance,
         feedback_text=feedback_text
         )    
-
+    
+@app.route("/history")
+def history():
+    with open("results.txt", "r") as file:
+        data = file.read()
+        
+    return render_template(
+        "history.html",
+        data=data
+        )
+    
 if __name__ == "__main__":
     app.run(debug = True)

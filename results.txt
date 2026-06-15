@@ -1,10 +1,1 @@
-Name: ruder
-Role: Data Analyst
-Score: 12/24
-Performance: Good
----------------------
-Name: ruder
-Role: Data Analyst
-Score: 12/24
-Performance: Good
----------------------
+
