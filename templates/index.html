@@ -1,26 +1,37 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>AI Interview Coach</title>
-        <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
-    </head>
-    <body>
-
-        <div class="container">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Interview Coach</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <main class="page-shell">
+        <section class="hero">
+            <p class="eyebrow">Practice with purpose</p>
             <h1>AI Interview Coach</h1>
-            <form action="/interview" method="POST">
-                <label>Enter Your Name</label>
-                <input type="text" name="username"  placeholder="Your Name">
+            <p class="hero-text">Prepare for internships with role-based questions, answer scoring, history tracking, and structured feedback.</p>
+        </section>
 
-                <label> Select Role</label>
-                <select name="role">
-                    <option>Data Analyst</option>
-                    <option>Software Developer</option>
-                    <option>AI/ML Engineer</option>
+        <section class="panel">
+            <h2>Start a mock interview</h2>
+            <form action="/interview" method="POST" class="form">
+                <label for="username">Your name</label>
+                <input type="text" id="username" name="username" placeholder="Ruder Mittal" required>
+
+                <label for="role">Choose role</label>
+                <select id="role" name="role" required>
+                    {% for role in roles %}
+                        <option value="{{ role }}">{{ role }}</option>
+                    {% endfor %}
                 </select>
-                
+
                 <button type="submit">Start Interview</button>
             </form>
-        </div>
-    </body>
-    </html>
+
+            <a class="secondary-link" href="/history">View Interview History</a>
+        </section>
+    </main>
+</body>
+</html>

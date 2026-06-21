@@ -1,17 +1,32 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interview History</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-
-    <h1>Interview History</h1>
-
-    <pre>{{ data }}</pre>
-
-    <a href="/">
-        <button>Back To Home</button>
-    </a>
-
+    <main class="page-shell narrow">
+        <section class="panel">
+            <h1>Interview History</h1>
+            {% if attempts %}
+                <div class="history-list">
+                    {% for attempt in attempts|reverse %}
+                        <a class="history-item" href="/history/{{ attempt.id }}">
+                            <span>
+                                <strong>{{ attempt.username }}</strong>
+                                <small>{{ attempt.role }} | {{ attempt.created_at }}</small>
+                            </span>
+                            <strong>{{ attempt.total_score }}/30</strong>
+                        </a>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="history-box">No interview history yet.</p>
+            {% endif %}
+            <a class="link-button" href="/">Back To Home</a>
+        </section>
+    </main>
 </body>
 </html>

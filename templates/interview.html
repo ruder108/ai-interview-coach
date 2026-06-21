@@ -1,28 +1,37 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interview Question</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+    <main class="page-shell narrow">
+        <section class="panel">
+            <p class="eyebrow">{{ role }}</p>
+            <h1>Hi {{ username }}, answer this question</h1>
 
-    <h1>Welcome {{ username }}</h1>
+            <div class="meta-row">
+                <span>Question {{ question_index + 1 }} of 3</span>
+                <span>Total Score: {{ total_score }}/30</span>
+            </div>
 
-    <h2>Question {{ question_index + 1 }} of 3</h2>
+            <div class="question-box">{{ question }}</div>
 
-    <p>{{ question }}</p>
-    <p>Total Score: {{ total_score}}</p>
+            <form action="/feedback" method="POST" class="form">
+                <input type="hidden" name="username" value="{{ username }}">
+                <input type="hidden" name="question" value="{{ question }}">
+                <input type="hidden" name="role" value="{{ role }}">
+                <input type="hidden" name="question_index" value="{{ question_index }}">
+                <input type="hidden" name="total_score" value="{{ total_score }}">
 
-    <form action="/feedback" method="POST">
-        <input type="hidden" name="username" value="{{ username }}">
-        <input type="hidden" name="question" value="{{ question }}">
-        <input type="hidden" name="role" value="{{ role}}">
-        <input type="hidden" name="question_index" value="{{ question_index }}">
-        <input type="hidden" name="total_score" value="{{total_score }}">
-        <textarea rows="6" cols="60" name="answer" placeholder="Write your answer here"></textarea>
+                <label for="answer">Your answer</label>
+                <textarea id="answer" rows="8" name="answer" placeholder="Write your answer here..." required></textarea>
 
-    <br><br>
-
-    <button type="submit">Submit Answer</button>
-    </form>
+                <button type="submit">Submit Answer</button>
+            </form>
+        </section>
+    </main>
 </body>
 </html>
