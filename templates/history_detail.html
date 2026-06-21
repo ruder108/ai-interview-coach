@@ -20,6 +20,26 @@
             <p>{{ attempt.feedback_text }}</p>
             <p class="muted">Attempt date: {{ attempt.created_at }}</p>
 
+            <h2>Category Summary</h2>
+            <div class="category-grid">
+                <div class="category-pill">
+                    <span>Relevance</span>
+                    <strong>{{ attempt.category_summary.relevance }}/12</strong>
+                </div>
+                <div class="category-pill">
+                    <span>Detail</span>
+                    <strong>{{ attempt.category_summary.detail }}/6</strong>
+                </div>
+                <div class="category-pill">
+                    <span>Clarity</span>
+                    <strong>{{ attempt.category_summary.clarity }}/6</strong>
+                </div>
+                <div class="category-pill">
+                    <span>Structure</span>
+                    <strong>{{ attempt.category_summary.structure }}/6</strong>
+                </div>
+            </div>
+
             {% for item in attempt.answers %}
                 <article class="review-card">
                     <div class="meta-row">
@@ -28,6 +48,12 @@
                     </div>
 
                     <h3>{{ item.question }}</h3>
+                    <div class="mini-category-grid">
+                        <span>Relevance: {{ item.categories.relevance }}/4</span>
+                        <span>Detail: {{ item.categories.detail }}/2</span>
+                        <span>Clarity: {{ item.categories.clarity }}/2</span>
+                        <span>Structure: {{ item.categories.structure }}/2</span>
+                    </div>
                     <p class="answer-box">{{ item.answer }}</p>
 
                     <h4>Strengths</h4>

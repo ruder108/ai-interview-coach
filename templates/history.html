@@ -17,6 +17,14 @@
                             <span>
                                 <strong>{{ attempt.username }}</strong>
                                 <small>{{ attempt.role }} | {{ attempt.created_at }}</small>
+                                {% if attempt.category_summary %}
+                                    <small>
+                                        Relevance {{ attempt.category_summary.relevance }}/12 |
+                                        Detail {{ attempt.category_summary.detail }}/6 |
+                                        Clarity {{ attempt.category_summary.clarity }}/6 |
+                                        Structure {{ attempt.category_summary.structure }}/6
+                                    </small>
+                                {% endif %}
                             </span>
                             <strong>{{ attempt.total_score }}/30</strong>
                         </a>

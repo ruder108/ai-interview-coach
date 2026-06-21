@@ -71,45 +71,92 @@ def evaluate_answer(answer, keywords):
     lower_answer = answer.lower()
     matched_keywords = [keyword for keyword in keywords if keyword.lower() in lower_answer]
 
-    score = 0
+    categories = {
+        "relevance": 0,
+        "detail": 0,
+        "clarity": 0,
+        "structure": 0,
+    }
     strengths = []
     improvements = []
 
-    if len(words) >= 25:
-        score += 3
-        strengths.append("Your answer has enough detail for a basic interview response.")
-    else:
-        improvements.append("Add more explanation. A good interview answer should not be too short.")
-
-    score += min(len(matched_keywords), 4)
-
+    categories["relevance"] = min(len(matched_keywords), 4)
     if matched_keywords:
         strengths.append(f"You included useful terms: {', '.join(matched_keywords)}.")
     else:
         improvements.append("Your answer seems unrelated to the question. Focus on the topic asked.")
         improvements.append("Include more important role-related keywords in your answer.")
 
+    if len(words) >= 25:
+        categories["detail"] = 2
+        strengths.append("Your answer has enough detail for a basic interview response.")
+    elif len(words) >= 12:
+        categories["detail"] = 1
+        improvements.append("Add a little more explanation to make the answer stronger.")
+    else:
+        improvements.append("Add more explanation. A good interview answer should not be too short.")
+
     if "." in answer or "," in answer:
-        score += 1
+        categories["clarity"] = 2
         strengths.append("Your answer uses sentence structure instead of only keywords.")
+    elif len(words) >= 8:
+        categories["clarity"] = 1
+        improvements.append("Use punctuation and complete sentences to sound more professional.")
     else:
         improvements.append("Write in complete sentences to sound more professional.")
 
-    if len(words) >= 50:
-        score += 2
-        strengths.append("Your answer gives a more complete explanation.")
+    example_words = ["example", "because", "such as", "for instance", "helps", "important"]
+    has_reason_or_example = any(word in lower_answer for word in example_words)
+    if len(words) >= 50 or has_reason_or_example:
+        categories["structure"] = 2
+        strengths.append("Your answer includes reasoning or example-style explanation.")
+    elif len(words) >= 25:
+        categories["structure"] = 1
+        improvements.append("Add an example or reason to make your answer stronger.")
     else:
         improvements.append("Try to add an example or reason to make your answer stronger.")
 
+    score = sum(categories.values())
     if not matched_keywords:
         score = min(score, 3)
+        categories["relevance"] = 0
 
     return {
         "score": min(score, 10),
+        "categories": categories,
         "strengths": strengths,
         "improvements": improvements,
         "matched_keywords": matched_keywords,
     }
+
+
+def get_category_summary(answers):
+    if not answers:
+        return {}
+
+    category_names = ["relevance", "detail", "clarity", "structure"]
+    summary = {}
+
+    for category in category_names:
+        total = sum(answer.get("categories", {}).get(category, 0) for answer in answers)
+        summary[category] = total
+
+    return summary
+
+
+def normalize_attempt(attempt):
+    for answer in attempt.get("answers", []):
+        answer.setdefault(
+            "categories",
+            {
+                "relevance": 0,
+                "detail": 0,
+                "clarity": 0,
+                "structure": 0,
+            },
+        )
+    attempt.setdefault("category_summary", get_category_summary(attempt.get("answers", [])))
+    return attempt
 
 
 def load_attempts():
@@ -117,7 +164,9 @@ def load_attempts():
         return []
 
     with open(HISTORY_FILE, "r") as file:
-        return json.load(file)
+        attempts = json.load(file)
+
+    return [normalize_attempt(attempt) for attempt in attempts]
 
 
 def save_attempt(attempt):
@@ -201,6 +250,7 @@ def feedback():
             "question": question,
             "answer": answer,
             "score": score,
+            "categories": result["categories"],
             "strengths": result["strengths"],
             "improvements": result["improvements"],
             "sample_answer": current_question["sample_answer"],
@@ -224,6 +274,7 @@ def feedback():
     current_attempt["total_score"] = total_score
     current_attempt["performance"] = performance
     current_attempt["feedback_text"] = feedback_text
+    current_attempt["category_summary"] = get_category_summary(current_attempt["answers"])
     current_attempt["created_at"] = datetime.now().strftime("%d %b %Y, %I:%M %p")
     save_attempt(current_attempt)
     session.pop("current_attempt", None)
@@ -250,7 +301,7 @@ def history():
 def history_detail(attempt_id):
     for attempt in load_attempts():
         if attempt["id"] == attempt_id:
-            return render_template("history_detail.html", attempt=attempt)
+            return render_template("history_detail.html", attempt=normalize_attempt(attempt))
 
     abort(404)
 
