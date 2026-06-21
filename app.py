@@ -195,9 +195,131 @@ def get_performance(total_score):
     )
 
 
+def build_dashboard_stats(attempts):
+    if not attempts:
+        return {
+            "total_attempts": 0,
+            "average_score": 0,
+            "best_score": 0,
+            "latest_score": 0,
+            "latest_performance": "No attempts yet",
+            "category_averages": {
+                "relevance": 0,
+                "detail": 0,
+                "clarity": 0,
+                "structure": 0,
+            },
+            "role_counts": {},
+            "recent_attempts": [],
+            "best_attempt": None,
+        }
+
+    total_attempts = len(attempts)
+    total_score = sum(attempt["total_score"] for attempt in attempts)
+    latest_attempt = attempts[-1]
+    best_attempt = max(attempts, key=lambda attempt: attempt["total_score"])
+
+    category_names = ["relevance", "detail", "clarity", "structure"]
+    category_averages = {}
+    for category in category_names:
+        category_total = sum(
+            attempt.get("category_summary", {}).get(category, 0)
+            for attempt in attempts
+        )
+        category_averages[category] = round(category_total / total_attempts, 1)
+
+    role_counts = {}
+    for attempt in attempts:
+        role = attempt["role"]
+        role_counts[role] = role_counts.get(role, 0) + 1
+
+    return {
+        "total_attempts": total_attempts,
+        "average_score": round(total_score / total_attempts, 1),
+        "best_score": best_attempt["total_score"],
+        "latest_score": latest_attempt["total_score"],
+        "latest_performance": latest_attempt["performance"],
+        "category_averages": category_averages,
+        "role_counts": role_counts,
+        "recent_attempts": list(reversed(attempts[-5:])),
+        "best_attempt": best_attempt,
+    }
+
+
+def build_comparison(first_attempt, second_attempt):
+    category_names = ["relevance", "detail", "clarity", "structure"]
+    category_differences = {}
+
+    for category in category_names:
+        first_score = first_attempt.get("category_summary", {}).get(category, 0)
+        second_score = second_attempt.get("category_summary", {}).get(category, 0)
+        category_differences[category] = second_score - first_score
+
+    score_difference = second_attempt["total_score"] - first_attempt["total_score"]
+
+    if score_difference > 0:
+        summary = f"Improved by {score_difference} marks."
+    elif score_difference < 0:
+        summary = f"Score decreased by {abs(score_difference)} marks."
+    else:
+        summary = "Score stayed the same."
+
+    strongest_category = max(category_differences, key=lambda item: category_differences[item])
+    weakest_category = min(
+        second_attempt.get("category_summary", {}),
+        key=lambda item: second_attempt["category_summary"][item],
+    )
+
+    return {
+        "first": first_attempt,
+        "second": second_attempt,
+        "score_difference": score_difference,
+        "category_differences": category_differences,
+        "summary": summary,
+        "strongest_category": strongest_category,
+        "weakest_category": weakest_category,
+    }
+
+
 @app.route("/")
 def home():
     return render_template("index.html", roles=questions.keys())
+
+
+@app.route("/dashboard")
+def dashboard():
+    attempts = load_attempts()
+    stats = build_dashboard_stats(attempts)
+    return render_template("dashboard.html", stats=stats)
+
+
+@app.route("/compare", methods=["GET", "POST"])
+def compare():
+    attempts = load_attempts()
+    comparison = None
+    error = None
+
+    if request.method == "POST":
+        first_id = request.form.get("first_attempt")
+        second_id = request.form.get("second_attempt")
+
+        if first_id == second_id:
+            error = "Please select two different attempts."
+        else:
+            first_attempt = next((attempt for attempt in attempts if attempt["id"] == first_id), None)
+            second_attempt = next((attempt for attempt in attempts if attempt["id"] == second_id), None)
+
+            if first_attempt and second_attempt:
+                comparison = build_comparison(first_attempt, second_attempt)
+            else:
+                error = "Could not find the selected attempts."
+
+    return render_template(
+        "compare.html",
+        attempts=list(reversed(attempts)),
+        comparison=comparison,
+        error=error,
+    )
 
 
 @app.route("/interview", methods=["POST"])

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progress Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <main class="page-shell wide">
+        <section class="panel">
+            <p class="eyebrow">Progress tracking</p>
+            <h1>Progress Dashboard</h1>
+
+            <div class="dashboard-grid">
+                <div class="dashboard-card">
+                    <span>Total Attempts</span>
+                    <strong>{{ stats.total_attempts }}</strong>
+                </div>
+                <div class="dashboard-card">
+                    <span>Average Score</span>
+                    <strong>{{ stats.average_score }}/30</strong>
+                </div>
+                <div class="dashboard-card">
+                    <span>Best Score</span>
+                    <strong>{{ stats.best_score }}/30</strong>
+                </div>
+                <div class="dashboard-card">
+                    <span>Latest Score</span>
+                    <strong>{{ stats.latest_score }}/30</strong>
+                    <small>{{ stats.latest_performance }}</small>
+                </div>
+            </div>
+
+            <h2>Category Averages</h2>
+            <div class="category-grid">
+                <div class="category-pill">
+                    <span>Relevance</span>
+                    <strong>{{ stats.category_averages.relevance }}/12</strong>
+                </div>
+                <div class="category-pill">
+                    <span>Detail</span>
+                    <strong>{{ stats.category_averages.detail }}/6</strong>
+                </div>
+                <div class="category-pill">
+                    <span>Clarity</span>
+                    <strong>{{ stats.category_averages.clarity }}/6</strong>
+                </div>
+                <div class="category-pill">
+                    <span>Structure</span>
+                    <strong>{{ stats.category_averages.structure }}/6</strong>
+                </div>
+            </div>
+
+            <div class="dashboard-columns">
+                <section>
+                    <h2>Recent Attempts</h2>
+                    {% if stats.recent_attempts %}
+                        <div class="history-list compact">
+                            {% for attempt in stats.recent_attempts %}
+                                <a class="history-item" href="/history/{{ attempt.id }}">
+                                    <span>
+                                        <strong>{{ attempt.role }}</strong>
+                                        <small>{{ attempt.created_at }}</small>
+                                    </span>
+                                    <strong>{{ attempt.total_score }}/30</strong>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="history-box">No attempts yet. Complete an interview to see progress.</p>
+                    {% endif %}
+                </section>
+
+                <section>
+                    <h2>Role Practice Count</h2>
+                    {% if stats.role_counts %}
+                        <div class="role-list">
+                            {% for role, count in stats.role_counts.items() %}
+                                <div class="role-row">
+                                    <span>{{ role }}</span>
+                                    <strong>{{ count }}</strong>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="history-box">No role data yet.</p>
+                    {% endif %}
+                </section>
+            </div>
+
+            {% if stats.best_attempt %}
+                <h2>Best Attempt</h2>
+                <a class="history-item" href="/history/{{ stats.best_attempt.id }}">
+                    <span>
+                        <strong>{{ stats.best_attempt.role }}</strong>
+                        <small>{{ stats.best_attempt.created_at }} | {{ stats.best_attempt.performance }}</small>
+                    </span>
+                    <strong>{{ stats.best_attempt.total_score }}/30</strong>
+                </a>
+            {% endif %}
+
+            <div class="button-row">
+                <a class="link-button" href="/">Start New Interview</a>
+                <a class="link-button secondary" href="/history">View History</a>
+                <a class="link-button secondary" href="/compare">Compare Attempts</a>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

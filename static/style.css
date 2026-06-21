@@ -37,6 +37,11 @@ small {
     grid-template-columns: 1fr;
 }
 
+.page-shell.wide {
+    max-width: 1080px;
+    grid-template-columns: 1fr;
+}
+
 .hero {
     padding: 28px 0;
 }
@@ -124,10 +129,16 @@ button:hover,
 
 .secondary-link {
     display: inline-block;
-    margin-top: 18px;
     color: #2563eb;
     font-weight: 700;
     text-decoration: none;
+}
+
+.nav-links {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 18px;
 }
 
 .question-box,
@@ -224,6 +235,10 @@ button:hover,
     margin: 22px 0;
 }
 
+.history-list.compact {
+    margin-top: 12px;
+}
+
 .history-item {
     display: flex;
     justify-content: space-between;
@@ -251,6 +266,135 @@ button:hover,
     grid-template-columns: repeat(4, 1fr);
     gap: 12px;
     margin: 16px 0 22px;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin: 22px 0;
+}
+
+.dashboard-card {
+    border: 1px solid #dbe3ef;
+    border-radius: 8px;
+    padding: 18px;
+    background: #f8fafc;
+    min-width: 0;
+}
+
+.dashboard-card span {
+    display: block;
+    margin-bottom: 8px;
+    color: #64748b;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.dashboard-card strong {
+    display: block;
+    color: #111827;
+    font-size: 28px;
+}
+
+.dashboard-card small {
+    display: block;
+    margin-top: 6px;
+    color: #64748b;
+}
+
+.dashboard-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+    align-items: start;
+}
+
+.role-list {
+    display: grid;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.role-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    border: 1px solid #dbe3ef;
+    border-radius: 8px;
+    padding: 18px;
+    background: #f8fafc;
+}
+
+.role-row span {
+    font-weight: 700;
+}
+
+.compare-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 14px;
+    align-items: end;
+    margin: 22px 0;
+}
+
+.comparison-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin: 16px 0 22px;
+}
+
+.comparison-card {
+    border: 1px solid #dbe3ef;
+    border-radius: 8px;
+    padding: 18px;
+    background: #f8fafc;
+    min-width: 0;
+}
+
+.comparison-card.highlight {
+    background: #ecfdf5;
+    border-color: #bbf7d0;
+}
+
+.comparison-card span {
+    display: block;
+    margin-bottom: 8px;
+    color: #64748b;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.comparison-card strong {
+    display: block;
+    color: #111827;
+    font-size: 30px;
+}
+
+.comparison-card small {
+    display: block;
+    margin-top: 6px;
+    color: #64748b;
+}
+
+.insight-box,
+.error-box {
+    border-radius: 8px;
+    padding: 16px;
+    margin: 18px 0;
+}
+
+.insight-box {
+    border: 1px solid #bfdbfe;
+    background: #eff6ff;
+}
+
+.error-box {
+    border: 1px solid #fecaca;
+    background: #fff1f2;
+    color: #b91c1c;
+    font-weight: 700;
 }
 
 .category-pill {
@@ -305,7 +449,11 @@ li {
     }
 
     .category-grid,
+    .dashboard-grid,
+    .dashboard-columns,
+    .compare-form,
+    .comparison-grid,
     .mini-category-grid {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr;
     }
 }
