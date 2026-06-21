@@ -16,7 +16,7 @@
                         <a class="history-item" href="/history/{{ attempt.id }}">
                             <span>
                                 <strong>{{ attempt.username }}</strong>
-                                <small>{{ attempt.role }} | {{ attempt.created_at }}</small>
+                                <small>{{ attempt.role }} | {{ attempt.difficulty }} | {{ attempt.created_at }}</small>
                                 {% if attempt.category_summary %}
                                     <small>
                                         Relevance {{ attempt.category_summary.relevance }}/12 |

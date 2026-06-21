@@ -11,6 +11,7 @@
         <section class="panel">
             <p class="eyebrow">{{ performance }}</p>
             <h1>Interview Feedback</h1>
+            <p class="muted">{{ attempt.role }} | {{ attempt.difficulty }}</p>
 
             <div class="score-card">
                 <span>Total Score</span>
@@ -77,7 +78,7 @@
             {% endfor %}
 
             <div class="button-row">
-                <a class="link-button" href="/">Start New Interview</a>
+                <a class="link-button" href="/">Back to Home</a>
                 <a class="link-button secondary" href="/history">View History</a>
             </div>
         </section>

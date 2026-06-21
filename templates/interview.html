@@ -9,7 +9,7 @@
 <body>
     <main class="page-shell narrow">
         <section class="panel">
-            <p class="eyebrow">{{ role }}</p>
+            <p class="eyebrow">{{ role }} | {{ difficulty }}</p>
             <h1>Hi {{ username }}, answer this question</h1>
 
             <div class="meta-row">
@@ -23,6 +23,7 @@
                 <input type="hidden" name="username" value="{{ username }}">
                 <input type="hidden" name="question" value="{{ question }}">
                 <input type="hidden" name="role" value="{{ role }}">
+                <input type="hidden" name="difficulty" value="{{ difficulty }}">
                 <input type="hidden" name="question_index" value="{{ question_index }}">
                 <input type="hidden" name="total_score" value="{{ total_score }}">
 

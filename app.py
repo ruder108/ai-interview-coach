@@ -10,13 +10,14 @@ app = Flask(__name__)
 app.secret_key = "ai-interview-coach-dev-key"
 
 HISTORY_FILE = Path("attempts.json")
+DIFFICULTIES = ["Easy", "Medium", "Hard"]
 
 questions = {
     "Data Analyst": [
         {
             "question": "What is data cleaning?",
             "keywords": ["missing values", "duplicates", "accuracy", "quality", "inconsistent"],
-            "sample_answer": "Data cleaning means fixing or removing missing, duplicate, incorrect, or inconsistent data so analysis becomes more accurate.",
+            "sample_answer": "Data cleaning is the process of identifying and correcting errors, inconsistencies, duplicate records, and missing values in a dataset to improve its quality and accuracy.",
         },
         {
             "question": "What is SQL?",
@@ -63,6 +64,324 @@ questions = {
             "sample_answer": "A neural network is a machine learning model inspired by the brain. It uses layers of connected neurons to learn patterns from data.",
         },
     ],
+    "HR Interview": [
+        {
+            "question": "Tell me about yourself.",
+            "keywords": ["education", "skills", "project", "goal", "strength"],
+            "sample_answer": "A good answer briefly introduces your education, important skills, one relevant project, your career goal, and a strength related to the role.",
+        },
+        {
+            "question": "Why should we hire you?",
+            "keywords": ["skills", "learn", "project", "team", "value"],
+            "sample_answer": "You should connect your skills, learning attitude, project experience, teamwork, and the value you can bring to the company.",
+        },
+        {
+            "question": "What are your strengths and weaknesses?",
+            "keywords": ["strength", "weakness", "improve", "example", "learning"],
+            "sample_answer": "A strong answer gives one real strength with an example and one weakness with steps you are taking to improve it.",
+        },
+    ],
+    "Python Developer": [
+        {
+            "question": "What are Python lists and tuples?",
+            "keywords": ["list", "tuple", "mutable", "immutable", "ordered"],
+            "sample_answer": "Lists and tuples are ordered collections in Python. Lists are mutable, so they can be changed, while tuples are immutable.",
+        },
+        {
+            "question": "What is a Python function?",
+            "keywords": ["function", "def", "parameters", "return", "reuse"],
+            "sample_answer": "A Python function is a reusable block of code created using def. It can take parameters and return a result.",
+        },
+        {
+            "question": "What is exception handling in Python?",
+            "keywords": ["try", "except", "error", "handle", "program"],
+            "sample_answer": "Exception handling uses try and except blocks to handle errors safely so the program does not stop unexpectedly.",
+        },
+    ],
+    "Cyber Security Intern": [
+        {
+            "question": "What is phishing?",
+            "keywords": ["fake", "email", "password", "attack", "security"],
+            "sample_answer": "Phishing is a cyber attack where attackers use fake emails or websites to trick users into sharing passwords or sensitive information.",
+        },
+        {
+            "question": "What is two-factor authentication?",
+            "keywords": ["password", "otp", "verification", "security", "login"],
+            "sample_answer": "Two-factor authentication adds an extra verification step, such as an OTP, along with a password to make login more secure.",
+        },
+        {
+            "question": "What is malware?",
+            "keywords": ["software", "harmful", "virus", "system", "damage"],
+            "sample_answer": "Malware is harmful software such as viruses or spyware that can damage systems, steal data, or disrupt normal computer activity.",
+        },
+    ],
+    "Data Scientist": [
+        {
+            "question": "What is feature engineering?",
+            "keywords": ["features", "data", "model", "transform", "performance"],
+            "sample_answer": "Feature engineering is the process of creating or transforming input data features to improve a machine learning model's performance.",
+        },
+        {
+            "question": "What is model evaluation?",
+            "keywords": ["accuracy", "precision", "recall", "test data", "performance"],
+            "sample_answer": "Model evaluation means checking how well a model performs on test data using metrics like accuracy, precision, recall, or F1-score.",
+        },
+        {
+            "question": "What is the difference between classification and regression?",
+            "keywords": ["classification", "regression", "category", "continuous", "prediction"],
+            "sample_answer": "Classification predicts categories, such as pass or fail, while regression predicts continuous values, such as marks or price.",
+        },
+    ],
+}
+
+easy_questions = {
+    "Data Analyst": [
+        {
+            "question": "What is data?",
+            "keywords": ["facts", "information", "numbers", "records", "values"],
+            "sample_answer": "Data is a collection of facts, numbers, records, or information that can be used for analysis and decision-making.",
+        },
+        {
+            "question": "What is a table in a database?",
+            "keywords": ["rows", "columns", "database", "records", "data"],
+            "sample_answer": "A table stores data in rows and columns inside a database. Each row is a record and each column represents a field.",
+        },
+        {
+            "question": "Why are charts useful?",
+            "keywords": ["visual", "data", "understand", "patterns", "compare"],
+            "sample_answer": "Charts are useful because they make data easier to understand, compare, and identify patterns visually.",
+        },
+    ],
+    "Software Developer": [
+        {
+            "question": "What is programming?",
+            "keywords": ["instructions", "computer", "code", "software", "problem"],
+            "sample_answer": "Programming is the process of writing instructions for a computer to solve problems or build software.",
+        },
+        {
+            "question": "What is a variable?",
+            "keywords": ["store", "value", "data", "name", "memory"],
+            "sample_answer": "A variable is a named storage location used to store a value or data in a program.",
+        },
+        {
+            "question": "What is debugging?",
+            "keywords": ["error", "fix", "bug", "code", "test"],
+            "sample_answer": "Debugging is the process of finding and fixing errors or bugs in code.",
+        },
+    ],
+    "AI/ML Engineer": [
+        {
+            "question": "What is artificial intelligence?",
+            "keywords": ["machine", "human", "intelligence", "learn", "decision"],
+            "sample_answer": "Artificial intelligence is the ability of machines to perform tasks that normally require human intelligence, such as learning or decision-making.",
+        },
+        {
+            "question": "What is machine learning?",
+            "keywords": ["data", "learn", "model", "patterns", "prediction"],
+            "sample_answer": "Machine learning is a part of AI where models learn patterns from data and make predictions or decisions.",
+        },
+        {
+            "question": "What is training data?",
+            "keywords": ["data", "model", "learn", "examples", "training"],
+            "sample_answer": "Training data is the data used to teach a machine learning model how to recognize patterns and make predictions.",
+        },
+    ],
+    "HR Interview": [
+        {
+            "question": "Introduce yourself briefly.",
+            "keywords": ["name", "education", "skills", "project", "goal"],
+            "sample_answer": "A brief introduction should include your name, education, skills, one project, and your career goal.",
+        },
+        {
+            "question": "Why do you want this internship?",
+            "keywords": ["learn", "experience", "skills", "career", "company"],
+            "sample_answer": "A good answer explains that you want to learn, gain real experience, improve your skills, and contribute to the company.",
+        },
+        {
+            "question": "What is one of your strengths?",
+            "keywords": ["strength", "example", "skill", "work", "learn"],
+            "sample_answer": "Mention one real strength and support it with a small example from your studies, project, or teamwork.",
+        },
+    ],
+    "Python Developer": [
+        {
+            "question": "What is Python?",
+            "keywords": ["programming", "language", "simple", "readable", "code"],
+            "sample_answer": "Python is a popular programming language known for simple syntax, readability, and use in web development, data analysis, and AI.",
+        },
+        {
+            "question": "What is a loop in Python?",
+            "keywords": ["repeat", "for", "while", "code", "iteration"],
+            "sample_answer": "A loop is used to repeat code. Python commonly uses for loops and while loops.",
+        },
+        {
+            "question": "What is an if statement?",
+            "keywords": ["condition", "decision", "true", "false", "code"],
+            "sample_answer": "An if statement is used to make decisions in code by running a block only when a condition is true.",
+        },
+    ],
+    "Cyber Security Intern": [
+        {
+            "question": "What is cyber security?",
+            "keywords": ["protect", "systems", "data", "attacks", "security"],
+            "sample_answer": "Cyber security is the practice of protecting systems, networks, and data from digital attacks.",
+        },
+        {
+            "question": "What is a strong password?",
+            "keywords": ["long", "unique", "letters", "numbers", "symbols"],
+            "sample_answer": "A strong password is long, unique, and uses a mix of letters, numbers, and symbols.",
+        },
+        {
+            "question": "What is an OTP?",
+            "keywords": ["one", "time", "password", "verification", "login"],
+            "sample_answer": "An OTP is a one-time password used for verification during login or transactions.",
+        },
+    ],
+    "Data Scientist": [
+        {
+            "question": "What does a data scientist do?",
+            "keywords": ["data", "analysis", "model", "insights", "prediction"],
+            "sample_answer": "A data scientist analyzes data, builds models, finds insights, and helps make predictions or decisions.",
+        },
+        {
+            "question": "What is a dataset?",
+            "keywords": ["collection", "data", "rows", "columns", "records"],
+            "sample_answer": "A dataset is a collection of data, usually organized in rows and columns for analysis or model building.",
+        },
+        {
+            "question": "What is prediction?",
+            "keywords": ["future", "estimate", "model", "data", "output"],
+            "sample_answer": "Prediction means using data and a model to estimate an unknown or future value.",
+        },
+    ],
+}
+
+hard_questions = {
+    "Data Analyst": [
+        {
+            "question": "How would you handle missing values in a dataset?",
+            "keywords": ["missing values", "drop", "impute", "mean", "median"],
+            "sample_answer": "Missing values can be handled by removing rows, imputing values using mean or median, or using domain knowledge depending on the data and problem.",
+        },
+        {
+            "question": "Explain the difference between INNER JOIN and LEFT JOIN.",
+            "keywords": ["inner join", "left join", "matching", "rows", "tables"],
+            "sample_answer": "INNER JOIN returns only matching rows from both tables, while LEFT JOIN returns all rows from the left table and matching rows from the right table.",
+        },
+        {
+            "question": "How do dashboards help business decision-making?",
+            "keywords": ["dashboard", "metrics", "trends", "insights", "decisions"],
+            "sample_answer": "Dashboards help by showing important metrics, trends, and insights in one place so teams can make faster data-driven decisions.",
+        },
+    ],
+    "Software Developer": [
+        {
+            "question": "Explain polymorphism with an example.",
+            "keywords": ["polymorphism", "same", "method", "different", "classes"],
+            "sample_answer": "Polymorphism allows the same method name to behave differently for different classes, such as different objects having their own implementation of a speak method.",
+        },
+        {
+            "question": "What is the difference between stack and heap memory?",
+            "keywords": ["stack", "heap", "memory", "local", "dynamic"],
+            "sample_answer": "Stack memory stores local variables and function calls, while heap memory is used for dynamically allocated objects.",
+        },
+        {
+            "question": "What makes code maintainable?",
+            "keywords": ["readable", "modular", "comments", "testing", "naming"],
+            "sample_answer": "Maintainable code is readable, modular, well-named, tested, and organized so future changes are easier and safer.",
+        },
+    ],
+    "AI/ML Engineer": [
+        {
+            "question": "How can overfitting be reduced?",
+            "keywords": ["regularization", "cross validation", "dropout", "data", "simpler"],
+            "sample_answer": "Overfitting can be reduced using more data, simpler models, regularization, cross-validation, dropout, or early stopping.",
+        },
+        {
+            "question": "What is the bias-variance tradeoff?",
+            "keywords": ["bias", "variance", "underfitting", "overfitting", "generalization"],
+            "sample_answer": "The bias-variance tradeoff balances underfitting and overfitting. High bias causes underfitting, while high variance causes overfitting.",
+        },
+        {
+            "question": "Why is train-test split important?",
+            "keywords": ["train", "test", "generalization", "evaluate", "unseen"],
+            "sample_answer": "Train-test split is important because it evaluates a model on unseen data and shows how well it generalizes.",
+        },
+    ],
+    "HR Interview": [
+        {
+            "question": "Describe a time you failed and what you learned.",
+            "keywords": ["failed", "learned", "improved", "example", "responsibility"],
+            "sample_answer": "A strong answer explains a real failure, takes responsibility, describes what you learned, and shows how you improved afterward.",
+        },
+        {
+            "question": "Where do you see yourself in five years?",
+            "keywords": ["career", "skills", "growth", "learning", "contribute"],
+            "sample_answer": "A good answer connects your future growth with learning, building skills, contributing to projects, and becoming stronger in your field.",
+        },
+        {
+            "question": "How do you handle pressure or deadlines?",
+            "keywords": ["pressure", "deadline", "prioritize", "plan", "calm"],
+            "sample_answer": "Explain that you handle pressure by staying calm, prioritizing tasks, planning clearly, and communicating early if there are blockers.",
+        },
+    ],
+    "Python Developer": [
+        {
+            "question": "What are decorators in Python?",
+            "keywords": ["decorator", "function", "wrap", "modify", "behavior"],
+            "sample_answer": "Decorators are functions that wrap another function to modify or extend its behavior without changing the original function code.",
+        },
+        {
+            "question": "Explain list comprehension in Python.",
+            "keywords": ["list comprehension", "loop", "condition", "concise", "list"],
+            "sample_answer": "List comprehension is a concise way to create lists using an expression, loop, and optional condition in one line.",
+        },
+        {
+            "question": "What is the difference between shallow copy and deep copy?",
+            "keywords": ["shallow", "deep", "copy", "nested", "object"],
+            "sample_answer": "A shallow copy copies the outer object but shares nested objects, while a deep copy creates independent copies of nested objects too.",
+        },
+    ],
+    "Cyber Security Intern": [
+        {
+            "question": "What is the difference between encryption and hashing?",
+            "keywords": ["encryption", "hashing", "reversible", "one-way", "data"],
+            "sample_answer": "Encryption is reversible with a key, while hashing is one-way and commonly used to store passwords securely.",
+        },
+        {
+            "question": "What is SQL injection?",
+            "keywords": ["sql injection", "query", "input", "database", "attack"],
+            "sample_answer": "SQL injection is an attack where malicious input is inserted into database queries to access or modify unauthorized data.",
+        },
+        {
+            "question": "What is a firewall?",
+            "keywords": ["firewall", "network", "traffic", "allow", "block"],
+            "sample_answer": "A firewall monitors network traffic and allows or blocks traffic based on security rules.",
+        },
+    ],
+    "Data Scientist": [
+        {
+            "question": "How do you handle imbalanced datasets?",
+            "keywords": ["imbalanced", "resampling", "class weight", "precision", "recall"],
+            "sample_answer": "Imbalanced datasets can be handled using resampling, class weights, suitable metrics like precision and recall, or collecting more minority-class data.",
+        },
+        {
+            "question": "Explain precision and recall.",
+            "keywords": ["precision", "recall", "positive", "false", "metric"],
+            "sample_answer": "Precision measures how many predicted positives are correct, while recall measures how many actual positives were found by the model.",
+        },
+        {
+            "question": "Why is feature scaling important?",
+            "keywords": ["scaling", "features", "model", "distance", "gradient"],
+            "sample_answer": "Feature scaling is important because some models are affected by feature magnitude, especially distance-based and gradient-based models.",
+        },
+    ],
+}
+
+question_sets = {
+    "Easy": easy_questions,
+    "Medium": questions,
+    "Hard": hard_questions,
 }
 
 
@@ -145,6 +464,7 @@ def get_category_summary(answers):
 
 
 def normalize_attempt(attempt):
+    attempt.setdefault("difficulty", "Medium")
     for answer in attempt.get("answers", []):
         answer.setdefault(
             "categories",
@@ -283,7 +603,7 @@ def build_comparison(first_attempt, second_attempt):
 
 @app.route("/")
 def home():
-    return render_template("index.html", roles=questions.keys())
+    return render_template("index.html", roles=questions.keys(), difficulties=DIFFICULTIES)
 
 
 @app.route("/dashboard")
@@ -326,11 +646,14 @@ def compare():
 def interview():
     username = request.form["username"].strip()
     role = request.form["role"]
-    question_data = questions[role][0]
+    difficulty = request.form["difficulty"]
+    role_questions = question_sets[difficulty][role]
+    question_data = role_questions[0]
     session["current_attempt"] = {
         "id": str(uuid4()),
         "username": username,
         "role": role,
+        "difficulty": difficulty,
         "answers": [],
     }
 
@@ -338,6 +661,7 @@ def interview():
         "interview.html",
         username=username,
         role=role,
+        difficulty=difficulty,
         question=question_data["question"],
         question_index=0,
         total_score=0,
@@ -350,10 +674,12 @@ def feedback():
     question = request.form["question"]
     answer = request.form["answer"]
     role = request.form["role"]
+    difficulty = request.form["difficulty"]
     question_index = int(request.form["question_index"])
     next_index = question_index + 1
     total_score = int(request.form["total_score"])
-    current_question = questions[role][question_index]
+    role_questions = question_sets[difficulty][role]
+    current_question = role_questions[question_index]
     result = evaluate_answer(answer, current_question["keywords"])
     score = result["score"]
     total_score += score
@@ -364,6 +690,7 @@ def feedback():
             "id": str(uuid4()),
             "username": username,
             "role": role,
+            "difficulty": difficulty,
             "answers": [],
         }
 
@@ -380,13 +707,14 @@ def feedback():
     )
     session["current_attempt"] = current_attempt
 
-    if next_index < len(questions[role]):
-        next_question = questions[role][next_index]
+    if next_index < len(role_questions):
+        next_question = role_questions[next_index]
 
         return render_template(
             "interview.html",
             username=username,
             role=role,
+            difficulty=difficulty,
             question=next_question["question"],
             question_index=next_index,
             total_score=total_score,

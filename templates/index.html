@@ -27,6 +27,13 @@
                     {% endfor %}
                 </select>
 
+                <label for="difficulty">Choose difficulty</label>
+                <select id="difficulty" name="difficulty" required>
+                    {% for difficulty in difficulties %}
+                        <option value="{{ difficulty }}">{{ difficulty }}</option>
+                    {% endfor %}
+                </select>
+
                 <button type="submit">Start Interview</button>
             </form>
 

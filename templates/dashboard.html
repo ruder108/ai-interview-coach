@@ -61,7 +61,7 @@
                                 <a class="history-item" href="/history/{{ attempt.id }}">
                                     <span>
                                         <strong>{{ attempt.role }}</strong>
-                                        <small>{{ attempt.created_at }}</small>
+                                        <small>{{ attempt.difficulty }} | {{ attempt.created_at }}</small>
                                     </span>
                                     <strong>{{ attempt.total_score }}/30</strong>
                                 </a>
@@ -94,7 +94,7 @@
                 <a class="history-item" href="/history/{{ stats.best_attempt.id }}">
                     <span>
                         <strong>{{ stats.best_attempt.role }}</strong>
-                        <small>{{ stats.best_attempt.created_at }} | {{ stats.best_attempt.performance }}</small>
+                        <small>{{ stats.best_attempt.difficulty }} | {{ stats.best_attempt.created_at }} | {{ stats.best_attempt.performance }}</small>
                     </span>
                     <strong>{{ stats.best_attempt.total_score }}/30</strong>
                 </a>

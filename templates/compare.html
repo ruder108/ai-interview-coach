@@ -24,7 +24,7 @@
                         <label for="first_attempt">First attempt</label>
                         <select id="first_attempt" name="first_attempt" required>
                             {% for attempt in attempts %}
-                                <option value="{{ attempt.id }}">{{ attempt.created_at }} | {{ attempt.role }} | {{ attempt.total_score }}/30</option>
+                                <option value="{{ attempt.id }}">{{ attempt.created_at }} | {{ attempt.role }} | {{ attempt.difficulty }} | {{ attempt.total_score }}/30</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -33,7 +33,7 @@
                         <label for="second_attempt">Second attempt</label>
                         <select id="second_attempt" name="second_attempt" required>
                             {% for attempt in attempts %}
-                                <option value="{{ attempt.id }}">{{ attempt.created_at }} | {{ attempt.role }} | {{ attempt.total_score }}/30</option>
+                                <option value="{{ attempt.id }}">{{ attempt.created_at }} | {{ attempt.role }} | {{ attempt.difficulty }} | {{ attempt.total_score }}/30</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -48,12 +48,12 @@
                     <div class="comparison-card">
                         <span>First Attempt</span>
                         <strong>{{ comparison.first.total_score }}/30</strong>
-                        <small>{{ comparison.first.role }} | {{ comparison.first.created_at }}</small>
+                        <small>{{ comparison.first.role }} | {{ comparison.first.difficulty }} | {{ comparison.first.created_at }}</small>
                     </div>
                     <div class="comparison-card">
                         <span>Second Attempt</span>
                         <strong>{{ comparison.second.total_score }}/30</strong>
-                        <small>{{ comparison.second.role }} | {{ comparison.second.created_at }}</small>
+                        <small>{{ comparison.second.role }} | {{ comparison.second.difficulty }} | {{ comparison.second.created_at }}</small>
                     </div>
                     <div class="comparison-card highlight">
                         <span>Difference</span>
